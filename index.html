@@ -3,178 +3,1662 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE QUANTITATIVE PLAYBOOK - BADBOY Wall Streetg</title>
+    <title>THE QUANTITATIVE PLAYBOOK - BADBOY Wall Street</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Urbanist:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
-        body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
+        /* CSS variables for theme consistency */
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #131b2e;
+            --bg-accent: #1e293b;
+            --color-primary: #00ff88; /* Neon Green for positive/success */
+            --color-secondary: #facc15; /* Gold for pivot/warning */
+            --color-danger: #ef4444; /* Neon Red for negative/critical */
+            --color-info: #3b82f6; /* Blue for neutral info */
+            --color-purple: #a855f7; /* Purple for POC / Volume */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 40px;
+            padding: 0;
+        }
+        /* Order Flow Footprint Styles */
+        .footprint-container {
             display: flex;
-            justify-content: center;
-        }
-        .container {
-            max-width: 900px;
-            background-color: #1e1e1e;
-            padding: 50px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
-            border: 1px solid #333;
-        }
-        h1 {
-            color: #00ff88;
-            text-align: center;
-            font-size: 28px;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .credit {
-            text-align: center;
-            color: #aaaaaa;
-            font-size: 14px;
-            margin-bottom: 40px;
-            font-style: italic;
-        }
-        .credit span {
-            color: #ff9900;
-            font-weight: bold;
-        }
-        h2 {
-            color: #ff9900;
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
-            margin-top: 40px;
-            font-size: 22px;
-        }
-        h3 {
-            color: #4da6ff;
-            margin-top: 25px;
-            font-size: 18px;
-        }
-        ul {
-            padding-left: 20px;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        .highlight-yellow { color: #ffd700; font-weight: bold; }
-        .highlight-green { color: #00ff88; font-weight: bold; }
-        .highlight-red { color: #ff4d4d; font-weight: bold; }
-        .math-box {
-            background-color: #2a2a2a;
-            padding: 15px;
-            border-left: 4px solid #4da6ff;
-            margin: 15px 0;
-            font-family: monospace;
-            font-size: 16px;
-        }
-        .ascii-art {
-            background-color: #0a0a0a;
-            color: #00ff88;
-            padding: 20px;
-            border-radius: 5px;
-            font-family: monospace;
-            white-space: pre;
-            overflow-x: auto;
-            text-align: center;
-            border: 1px dashed #333;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 50px;
-            color: #666;
-            font-size: 12px;
-            border-top: 1px solid #333;
-            padding-top: 20px;
-        }
-        .warning-box {
-            background-color: #331a1a;
-            border-left: 4px solid #ff4d4d;
+            flex-direction: column;
+            gap: 10px;
+            background: #060913;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             padding: 15px;
             margin-top: 15px;
+            width: 100%;
+        }
+        .footprint-grid {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 280px;
+            padding: 5px;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+            gap: 10px;
+        }
+        .footprint-candle {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 130px;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid #334155;
+            border-radius: 6px;
+            font-family: 'Urbanist', monospace;
+            font-size: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .footprint-candle.bearish {
+            border-color: rgba(239, 68, 68, 0.4);
+            background: rgba(239, 68, 68, 0.03);
+        }
+        .footprint-candle.bullish-reversal, .footprint-candle.bullish-strong, .footprint-candle.bullish-continuation, .footprint-candle.bullish-pin {
+            border-color: rgba(0, 255, 136, 0.4);
+            background: rgba(0, 255, 136, 0.03);
+        }
+        .footprint-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            text-align: center;
+        }
+        .footprint-row:last-child {
+            border-bottom: none;
+        }
+        .footprint-row.poc {
+            background: rgba(239, 68, 68, 0.25) !important;
+            font-weight: bold;
+            border: 1px solid var(--color-danger);
+        }
+        .imbalance-buy {
+            color: var(--color-primary);
+            font-weight: bold;
+            background: rgba(0, 255, 136, 0.15);
+            border-radius: 3px;
+            padding: 1px 3px;
+        }
+        .imbalance-sell {
+            color: var(--color-danger);
+            font-weight: bold;
+            background: rgba(239, 68, 68, 0.15);
+            border-radius: 3px;
+            padding: 1px 3px;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Kanit', sans-serif;
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        /* Header / Hero Section */
+        header {
+            background: radial-gradient(circle at 50% 50%, #111a2e 0%, var(--bg-main) 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.03) 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border: 2px solid var(--color-secondary);
+            color: var(--color-secondary);
+            font-family: 'Urbanist', sans-serif;
+            font-weight: 800;
+            font-size: 18px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.2);
+        }
+
+        h1 {
+            font-family: 'Urbanist', 'Kanit', sans-serif;
+            font-weight: 800;
+            font-size: 38px;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        h1 span {
+            background: linear-gradient(90deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto 25px auto;
+            font-weight: 300;
+        }
+
+        /* Navigation Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-width: 1100px;
+            margin: 0 auto;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            background: var(--color-info);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Main Workspace */
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Layout Grids and Cards */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Headings & Texts */
+        h2 {
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h3 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: var(--color-secondary);
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .lead-text {
+            font-size: 17px;
+            font-weight: 300;
+            color: var(--text-main);
+        }
+
+        /* Interactive Calculator Styles */
+        .calculator-panel {
+            background: var(--bg-accent);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            padding-left: 36px;
+            font-size: 18px;
+            color: var(--text-main);
+            border-radius: 8px;
+            font-family: 'Urbanist', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--color-info);
+            outline: none;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .calc-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #059669 100%);
+            color: #020617;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        /* Results table & list */
+        .results-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .result-value {
+            font-family: 'Urbanist', sans-serif;
+            font-weight: 700;
+            font-size: 17px;
+        }
+
+        .result-value.accent-yellow { color: var(--color-secondary); }
+        .result-value.accent-green { color: var(--color-primary); }
+        .result-value.accent-red { color: var(--color-danger); }
+
+        /* Canvas Styles */
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        #sd-canvas, #frvp-canvas {
+            background-color: #060913;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Math formula display */
+        .math-block {
+            background: rgba(15, 23, 42, 0.8);
+            border-left: 4px solid var(--color-info);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            font-family: 'Urbanist', monospace;
+            font-size: 18px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        /* Highlight Boxes */
+        .alert-box {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-left: 5px solid var(--color-danger);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .alert-box h4 {
+            color: var(--color-danger);
+            font-size: 17px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-box p {
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+
+        /* Checklist Playbook */
+        .checklist-group {
+            margin-bottom: 25px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 16px;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        .checklist-item.checked {
+            border-color: rgba(0, 255, 136, 0.2);
+            background: rgba(0, 255, 136, 0.03);
+        }
+
+        .checkbox-custom {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--text-muted);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+            margin-top: 2px;
+        }
+
+        .checklist-item.checked .checkbox-custom {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: #020617;
+        }
+
+        .checkbox-custom i {
+            font-size: 12px;
+            display: none;
+        }
+
+        .checklist-item.checked .checkbox-custom i {
+            display: block;
+        }
+
+        .checklist-text h4 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .checklist-item.checked .checklist-text h4 {
+            color: var(--color-primary);
+        }
+
+        .checklist-text p {
+            margin-bottom: 0;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* FRVP Interactive Controls */
+        .simulator-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .sim-btn {
+            flex: 1;
+            background: var(--bg-accent);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .sim-btn:hover {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .sim-btn.active {
+            background: var(--color-purple);
+            color: white;
+            border-color: var(--color-purple);
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+        }
+
+        .frvp-info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .frvp-info-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .frvp-info-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .frvp-info-val {
+            font-family: 'Urbanist', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 80px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 30px;
+        }
+
+        footer span {
+            color: var(--color-secondary);
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>THE QUANTITATIVE PLAYBOOK</h1>
-    <div class="credit">
-        Created & Strategized by: <span>BADBOY Wall Streetg</span><br>
-        Asset Class: Gold Futures (GC) | Methodology: Options Data, Order Flow (ATAS), Dynamic SD (VWAP)
-    </div>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo-badge">BADBOY WALL STREET</div>
+            <h1>THE QUANTITATIVE <span>PLAYBOOK</span></h1>
+            <p class="subtitle">คู่มือเทรดสัญญาทองคำเชิงสถิติขั้นสูง โดยการวิเคราะห์ข้อมูลความผันผวนจากตลาด Options คู่วัดกับการทำระดับ Anchored VWAP, Fixed Range Volume Profile และ Order Flow</p>
+            
+            <!-- Tab Controls -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('dashboard')">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard & IV Calc
+                </button>
+                <button class="tab-btn" onclick="switchTab('chapter1')">
+                    <i class="fa-solid fa-shield-halved"></i> 1. Options & GEX
+                </button>
+                <button class="tab-btn" onclick="switchTab('chapter2')">
+                    <i class="fa-solid fa-clock"></i> 2. Anchored VWAP
+                </button>
+                <button class="tab-btn" onclick="switchTab('chapter_frvp')">
+                    <i class="fa-solid fa-cubes"></i> 3. Fixed Range Volume Profile
+                </button>
+                <button class="tab-btn" onclick="switchTab('chapter3')">
+                    <i class="fa-solid fa-gamepad"></i> 4. Trade Playbook
+                </button>
+                <button class="tab-btn" onclick="switchTab('chapter_orderflow')">
+                    <i class="fa-solid fa-water"></i> 5. Order Flow (ATAS)
+                </button>
+            </div>
+        </div>
+    </header>
 
-    <h2>🎯 บทนำ: ปรัชญาการเทรดแบบสถาบัน</h2>
-    <p>การเทรดด้วยกราฟเปล่าเพียงอย่างเดียวอาจทำให้เราตกเป็นเหยื่อของสภาวะตลาดหลอก (False Breakout) คู่มือฉบับนี้จะเปลี่ยนมุมมองการเทรดของคุณให้เหมือนกองทุนระดับสถาบัน โดยอาศัย 3 เสาหลักในการสร้าง Edge (ความได้เปรียบ):</p>
-    <ul>
-        <li><strong>Options Volatility (Static SD):</strong> แผนที่บอกอาณาเขตระดับวันจากสายตา Market Maker</li>
-        <li><strong>Anchored VWAP (Dynamic SD):</strong> เข็มทิศบอกสภาวะเงินทุนแบบเรียลไทม์ในแต่ละ Session</li>
-        <li><strong>Order Flow (Execution):</strong> จังหวะลั่นไกที่คมกริบเมื่อเงื่อนไขสถิติครบถ้วน</li>
-    </ul>
+    <main>
+        <!-- TAB 1: DASHBOARD & CALCULATOR -->
+        <div id="dashboard" class="tab-content active">
+            <div class="two-column">
+                <!-- Left: Interactive Canvas Chart -->
+                <div class="card">
+                    <h2><i class="fa-solid fa-bezier-curve" style="color: var(--color-primary)"></i> Dynamic Expected Move Mapping (SD Curve)</h2>
+                    <p>สถิติระฆังคว่ำแบบเรียลไทม์จำลองค่าเบี่ยงเบนมาตรฐาน (SD) แสดงพิกัดราคารับ-ต้านเป้าหมายที่คำนวณจากค่า Implied Volatility (IV) จากตลาดโดยตรง</p>
+                    
+                    <div class="canvas-container">
+                        <canvas id="sd-canvas" width="650" height="350"></canvas>
+                    </div>
+                </div>
 
-    <h2>🛠️ บทที่ 1: การหา "แผนที่ระดับวัน" (Static SD)</h2>
-    <p>ก่อนลงสนามเทรดทุกวัน สิ่งแรกที่ต้องทำคือการหา <strong>Expected Move (1 SD)</strong> ประจำวัน เพื่อดูว่าเจ้ามือตีเส้นขอบสนามไว้ตรงไหน</p>
-    
-    <h3>1.1 การคำนวณรายวันด้วย The Rule of 16</h3>
-    <div class="math-box">
-        Daily Expected Move (%) = Implied Volatility (IV) ÷ 16
-    </div>
-    <ul>
-        <li>หากค่า VOL ประจำวันอยู่ที่ <span class="highlight-yellow">24%</span></li>
-        <li>24 ÷ 16 = <span class="highlight-yellow">1.5%</span> (กรอบ 1 SD รายวัน)</li>
-        <li>ถ้าราคาตลาดปัจจุบันคือ $4,460 นำ 1.5% ไปคูณ จะได้กรอบการสวิงตัวที่ <strong>$66.9</strong></li>
-    </ul>
+                <!-- Right: Rule of 16 Live Calculator -->
+                <div class="card calculator-panel">
+                    <h3><i class="fa-solid fa-calculator"></i> Rule of 16 Live Calculator</h3>
+                    <p style="font-size: 13px;">เครื่องคำนวณหาค่าความน่าจะเป็นรายวันจากกฎสถิติปีเทรด $\sqrt{252} \approx 16$</p>
+                    
+                    <div class="input-group">
+                        <label for="gold-price">ราคาทองคำปัจจุบัน (Gold Price - $)</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-coins"></i>
+                            <input type="number" id="gold-price" value="4460" step="0.1" oninput="calculateExpectedMove()">
+                        </div>
+                    </div>
 
-    <h3>1.2 กฎของ "โซนสุญญากาศ" (Air Pocket / Zero Gamma)</h3>
-    <p>หากราคา <strong>ทะลุหลุด Put Wall</strong> ลงไปด้านล่าง (หลุดโซน Delta ต่ำๆ) บริเวณนั้นจะไม่มี Gamma รองรับ กราฟจะเกิดภาวะ Free Fall ซึ่งถูกขับเคลื่อนด้วยแรงขาย Futures ล้วนๆ <span class="highlight-red">ห้ามรับมีดเด็ดขาด!</span></p>
+                    <div class="input-group">
+                        <label for="iv-val">Implied Volatility (IV - %)</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-chart-area"></i>
+                            <input type="number" id="iv-val" value="24" step="0.1" oninput="calculateExpectedMove()">
+                        </div>
+                    </div>
 
-    <h2>⏱️ บทที่ 2: การกำหนด "เข็มทิศหน้างาน" ด้วย Anchored VWAP</h2>
-    
-    <div class="ascii-art">
-                     [ ค่าเฉลี่ยกลาง / เส้น VWAP ]
-                                 │
-                                ───
-                              ─     ─
-                            ─         ─
-   ─────────────────────────────────────────────────────────────
-  -3 SD         -2 SD         -1 SD  │   +1 SD         +2 SD         +3 SD
-  [Extreme]  [Reversion]    [Normal] │  [Normal]    [Reversion]   [Extreme]
-    </div>
+                    <div class="results-panel">
+                        <ul class="results-list">
+                            <li class="result-item">
+                                <span class="result-label">Daily Expected Move (%)</span>
+                                <span class="result-value" id="daily-move-pct">1.50%</span>
+                            </li>
+                            <li class="result-item">
+                                <span class="result-label">Daily Range Value ($)</span>
+                                <span class="result-value" id="daily-move-usd">$66.90</span>
+                            </li>
+                            <li class="result-item">
+                                <span class="result-label">ขอบบน 1 SD (เหลืองบน)</span>
+                                <span class="result-value accent-yellow" id="sd1-upper">$4,526.90</span>
+                            </li>
+                            <li class="result-item">
+                                <span class="result-label">ขอบล่าง 1 SD (เหลืองล่าง)</span>
+                                <span class="result-value accent-yellow" id="sd1-lower">$4,393.10</span>
+                            </li>
+                            <li class="result-item">
+                                <span class="result-label">ขอบบน 2 SD (เขียวบน)</span>
+                                <span class="result-value accent-green" id="sd2-upper">$4,593.80</span>
+                            </li>
+                            <li class="result-item">
+                                <span class="result-label">ขอบล่าง 2 SD (เขียวล่าง)</span>
+                                <span class="result-value accent-green" id="sd2-lower">$4,326.20</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <h3>กฎการรีเซ็ตเวลา (The Anchor Reset Routine)</h3>
-    <ul>
-        <li><span class="highlight-yellow">14:00 น. (London):</span> ลากไปวางที่แท่งเทียนบ่าย 2 ตรง เพื่อจับเม็ดเงินยุโรป</li>
-        <li><span class="highlight-yellow">19:00 น. (New York):</span> ลากไปวางที่แท่งเทียน 1 ทุ่มตรง เพื่อจับโวลุ่มมหาศาลจากอเมริกา</li>
-        <li><span class="highlight-red">The Sniper Anchor (มีข่าว):</span> ลาก Anchor ไปวางที่แท่งเทียนตอนข่าวออกพอดี (เช่น 19:30 น.)</li>
-    </ul>
+        <!-- TAB 2: OPTIONS & GEX -->
+        <div id="chapter1" class="tab-content">
+            <div class="card">
+                <h2><i class="fa-solid fa-shield-halved" style="color: var(--color-secondary)"></i> บทที่ 1: การหา "แผนที่ระดับวัน" จากตลาด Options (Static SD)</h2>
+                <p class="lead-text">ก่อนเริ่มต้นเทรดในแต่ละวัน สิ่งแรกที่เราต้องหาคือขอบสนามทำรอบประจำวัน เพื่อไม่ให้เกิดสภาวะหลงทิศทาง</p>
+                
+                <h3>1.1 ตัวเลขเบื้องหลัง "The Rule of 16"</h3>
+                <p>สาย Quant ทั่วโลกจะใช้สมการแปลงความผันผวนต่อปี (Annualized IV) มาหาค่าเฉลี่ยความผันผวนต่อวัน โดยหารด้วยสแควร์รูทของจำนวนวันทำการเทรดใน 1 ปี (ซึ่งคือ $\sqrt{252} \approx 15.87$ หรือปัดเป็นค่าคงที่กลมๆ คือ 16)</p>
+                
+                <div class="math-block">
+                    $$\text{Daily Expected Move (\%)} = \frac{\text{IV}}{16}$$
+                </div>
 
-    <h2>⚔️ บทที่ 3: The Playbook - หน้าเทรดระดับสถาบัน</h2>
-    
-    <h3>🟩 Setup A: Breakout & Pullback to Mean (เทรดตามเทรนด์)</h3>
-    <ol>
-        <li><strong>ยืนยัน:</strong> รอให้ราคาเบรคทะลุและยืนเหนือกรอบ <span class="highlight-yellow">1 SD</span> ให้ได้ก่อน</li>
-        <li><strong>รอย่อ:</strong> ห้ามไล่ราคา ให้รอจังหวะ Pullback กลับมาที่ <span class="highlight-green">เส้นกลาง VWAP</span></li>
-        <li><strong>ลั่นไก:</strong> เปิด ATAS หากพบ Volume Absorption ให้กด Buy ทันที</li>
-    </ol>
+                <h3>1.2 การอ่านค่า Moneyness ผ่าน Delta (Δ)</h3>
+                <p>บนตาราง Option Chains (เช่น ในหน้า Vol2Vol หรือ Open Interest ของ CME QuikStrike) ค่าเดลต้าจะบ่งชี้ขอบเขตความน่าจะเป็นทางอ้อม:</p>
+                <ul>
+                    <li><strong>โซน 15 Δ (15 Delta):</strong> เทียบเท่ากับความห่างระดับ <strong>1 Standard Deviation (1 SD)</strong> ซึ่งครอบคลุมความน่าจะเป็นประมาณ 68% ของตลาด</li>
+                    <li><strong>โซน 5 Δ (5 Delta):</strong> เทียบเท่ากับความห่างระดับ <strong>2 Standard Deviation (2 SD)</strong> ครอบคลุมโอกาสกว่า 95% ของตลาด เป็นเขต Extreme</li>
+                </ul>
 
-    <h3>🟥 Setup B: Extreme Mean Reversion (เทรดสวนจุดสุดโต่ง)</h3>
-    <ol>
-        <li><strong>เล็งเป้า:</strong> รอราคาพุ่งไปชนขอบลึกที่โซน <span class="highlight-red">2 SD หรือ 3 SD</span></li>
-        <li><strong>Confluence:</strong> เช็คว่าทับซ้อนกับ Static SD (Rule of 16) หรือไม่</li>
-        <li><strong>ลั่นไก:</strong> เมื่อเห็นแรงสวนกลับใน ATAS อย่างชัดเจน ให้เข้าออเดอร์กลับเข้าหาค่าเฉลี่ย</li>
-    </ol>
+                <div class="alert-box">
+                    <h4><i class="fa-solid fa-radiation"></i> กฎเหล็กของ "โซนสุญญากาศ" (Zero Gamma Air Pocket)</h4>
+                    <p>แนวรับหลักคือ <strong>Put Wall</strong> และแนวต้านหลักคือ <strong>Call Wall</strong> ในสภาวะตลาดแบบ <strong>Negative Gamma (Short Gamma)</strong> หากราคาทะลุหลุด Put Wall ลงไปลึก (ฝั่ง Put Delta กลายเป็น 0 และฝั่ง Call Delta กลายเป็น 1) โซนนั้นจะไม่มีแรงพยุงทาง Gamma อีกต่อไป กราฟจะรูดลงเร็วเสมือนตกไปในเหวสุญญากาศ... <strong>ห้ามรับมีดเด็ดขาด!</strong></p>
+                </div>
+            </div>
+        </div>
 
-    <div class="warning-box">
-        <strong>🚫 กฎเหล็ก:</strong> ระวัง Fat Tails ในสภาวะตลาด Panic ราคาอาจเกาะเส้น -2 SD ไหลลงไปเรื่อยๆ ได้ ห้ามเทรดสวนโดยไม่มีสัญญาณจาก Order Flow (ATAS) ยืนยันเด็ดขาด!
-    </div>
+        <!-- TAB 3: ANCHORED VWAP -->
+        <div id="chapter2" class="tab-content">
+            <div class="card">
+                <h2><i class="fa-solid fa-hourglass-half" style="color: var(--color-info)"></i> บทที่ 2: การกำหนด "เข็มทิศหน้างาน" ด้วย Anchored VWAP</h2>
+                <p class="lead-text">เมื่อเราได้กรอบใหญ่ประเมินขอบสนามจากตลาด Options เรียบร้อยแล้ว (Static SD) เราจะใช้ "Anchored VWAP" บน TradingView เป็นตัวจับสมดุลโวลุ่มและการเคลื่อนตัวของราคาแบบเรียลไทม์ (Dynamic SD)</p>
 
-    <div class="footer">
-        [ 2026 ] BADBOY Wall Streetg - All Rights Reserved
-    </div>
-</div>
+                <h3>2.1 ความลับของ Anchor Reset Routine</h3>
+                <p>สายเทรด BADBOY Wall Street จะยึดหลักการ <strong>"ย้ายจุดเริ่มต้น (Anchor) ใหม่เมื่อเปลี่ยนช่วงเวลาสำคัญ"</strong> เสมอ เพื่อขจัดข้อมูลที่เก่าปะปนกับผู้เล่นหน้าใหม่ที่สาดเงินเข้ามาลุย โดยยึดเวลาทำการไทยดังนี้:</p>
+                
+                <div class="two-column" style="margin-top: 25px;">
+                    <div class="calculator-panel" style="background: rgba(15, 23, 42, 0.5);">
+                        <h4 style="color: var(--color-secondary); margin-bottom: 10px;"><i class="fa-solid fa-earth-europe"></i> 14:00 น. (London Session)</h4>
+                        <p style="font-size: 13px;">ลากจุดเริ่มต้นของ Anchored VWAP มาวางที่แท่งเทียนบ่าย 2 โมงตรง เพื่อเริ่มจับความเคลื่อนไหวชุดแรกของเงินฝั่งยุโรป</p>
+                    </div>
+                    <div class="calculator-panel" style="background: rgba(15, 23, 42, 0.5);">
+                        <h4 style="color: var(--color-primary); margin-bottom: 10px;"><i class="fa-solid fa-earth-americas"></i> 19:00 น. (New York Session)</h4>
+                        <p style="font-size: 13px;">ลากจุดเริ่มต้นย้ายมาวางที่แท่ง 1 ทุ่มตรง เพื่อเริ่มเก็บสถิติโวลุ่มตลาดอเมริกาสดๆ (สมรภูมิหลักช่วงทำเงินของเรา)</p>
+                    </div>
+                </div>
 
+                <div class="alert-box" style="background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.2); border-left-color: var(--color-info);">
+                    <h4 style="color: var(--color-info);"><i class="fa-solid fa-bullseye"></i> The Sniper Anchor (สูตรเด็ดหลังข่าวออก)</h4>
+                    <p>หากวันไหนมีประกาศตัวเลขเศรษฐกิจรุนแรง เช่น CPI, PPI หรือการประกาศข่าวนอกตาราง ให้รอจนข่าวออก (เช่น แท่ง 19:30 น.) แล้วทำการ <strong>เลื่อนจุด Anchor ไปเริ่มนับคำนวณใหม่ที่แท่งเทียนแท่งแรกหลังข่าวออกทันที</strong> นั่นคือสมรภูมิต้นทุนจริงที่สะท้อนฉันทามติของรายใหญ่รอบใหม่!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: FIXED RANGE VOLUME PROFILE (FRVP) -->
+        <div id="chapter_frvp" class="tab-content">
+            <div class="card">
+                <h2><i class="fa-solid fa-cubes" style="color: var(--color-purple)"></i> บทที่ 3: การวิเคราะห์ระดับชั้นวอลลุ่มเชิงปริมาณด้วย Fixed Range Volume Profile (FRVP)</h2>
+                <p class="lead-text">หาก Anchored VWAP คือเครื่องมือบอก "ราคาต้นทุนเฉลี่ยตามเวลา" เจ้า **Fixed Range Volume Profile (FRVP)** จะทำหน้าที่เป็นเอ็กซเรย์ (X-Ray) เจาะลงไปดูว่าที่ระดับราคาเฉพาะเจาะจงจุดใด มีการสะสมจำนวนสัญญาซื้อขาย (Volume) หนาแน่นที่สุดในกรอบนั้นๆ</p>
+
+                <div class="two-column">
+                    <!-- Left: Theoretical Core & Strategy -->
+                    <div>
+                        <h3>3.1 โครงสร้างหลัก 3 ประการของ FRVP</h3>
+                        <p>เมื่อลากกล่องเครื่องมือ FRVP ครอบคลุมพิกัดเวลาที่เราสนใจ (เช่น ตั้งแต่แท่งข่าวออกจนถึงแท่งปัจจุบัน) จุดสำคัญที่คุณต้องโฟกัสมีดังนี้:</p>
+                        
+                        <div class="checklist-group" style="margin-bottom: 20px;">
+                            <div class="checklist-item" style="border-left: 4px solid var(--color-danger); cursor: default;">
+                                <div class="checklist-text">
+                                    <h4 style="color: var(--color-danger);"><i class="fa-solid fa-crosshairs"></i> POC (Point of Control)</h4>
+                                    <p>เส้นราคาที่มีปริมาณการเทรดสูงที่สุดในกรอบที่เราเลือก (มักเป็นเส้นสีแดงบน TradingView) ทำหน้าที่เป็น "แม่เหล็กขนาดใหญ่" ที่ดูดราคากลับมาสะสมกำลัง หรือทำหน้าที่เป็นด่านเด้งรับ/ต้านที่แข็งแกร่งที่สุดในสถิติ</p>
+                                </div>
+                            </div>
+                            
+                            <div class="checklist-item" style="border-left: 4px solid var(--color-info); cursor: default;">
+                                <div class="checklist-text">
+                                    <h4 style="color: var(--color-info);"><i class="fa-solid fa-box"></i> Value Area (VAH / VAL)</h4>
+                                    <p>พื้นที่ Value Area High (VAH) และ Value Area Low (VAL) คือโซนที่ครอบคลุม 70% ของสัญญาซื้อขายทั้งหมดในกล่อง เส้นขอบของพื้นที่นี้มักทำหน้าที่เป็นแนวรับแนวต้านแบบไดนามิกที่รายใหญ่คอยคุมโซน</p>
+                                </div>
+                            </div>
+
+                            <div class="checklist-item" style="border-left: 4px solid var(--color-primary); cursor: default;">
+                                <div class="checklist-text">
+                                    <h4 style="color: var(--color-primary);"><i class="fa-solid fa-compress"></i> HVN vs LVN (High/Low Volume Nodes)</h4>
+                                    <p><strong>HVN (ภูเขาวอลลุ่ม):</strong> ราคาจะเคลื่อนที่ช้าและสะสมพลังเนื่องจากเป็นราคาที่ยอมรับร่วมกัน<br>
+                                    <strong>LVN (หุบเขาสุญญากาศ):</strong> ไม่มีสภาพคล่องตั้งรับ ราคาจะวิ่งทะลุผ่านโซนนี้อย่างรวดเร็ว (Liquidity Vacuum) เหมาะสำหรับมองเป็นเป้าลากกินคำโต</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Visual Simulator -->
+                    <div class="calculator-panel">
+                        <h4 style="color: var(--color-purple); font-size: 16px; margin-bottom: 10px;"><i class="fa-solid fa-play"></i> Interactive FRVP Simulator</h4>
+                        <p style="font-size: 13px; margin-bottom: 15px;">ทดลองสลับสภาวะตลาดด้านล่าง เพื่อดูพฤติกรรมราคาจำลองที่ตอบสนองต่อแนว POC (เส้นแดง), Value Area (กรอบม่วง) และโซนสูญญากาศ LVN</p>
+                        
+                        <div class="simulator-controls">
+                            <button class="sim-btn active" id="sim-btn-1" onclick="loadSimulation('cpi')">CPI News Dump</button>
+                            <button class="sim-btn" id="sim-btn-2" onclick="loadSimulation('sideways')">Sideways Range</button>
+                            <button class="sim-btn" id="sim-btn-3" onclick="loadSimulation('squeeze')">Short Squeeze</button>
+                        </div>
+
+                        <div class="canvas-container">
+                            <canvas id="frvp-canvas" width="450" height="280"></canvas>
+                        </div>
+
+                        <div class="frvp-info-grid">
+                            <div class="frvp-info-card">
+                                <div class="frvp-info-title">Status</div>
+                                <div class="frvp-info-val" id="frvp-status" style="color: var(--color-primary)">-</div>
+                            </div>
+                            <div class="frvp-info-card">
+                                <div class="frvp-info-title">VAH (ต้าน)</div>
+                                <div class="frvp-info-val" id="frvp-vah" style="color: var(--color-secondary)">-</div>
+                            </div>
+                            <div class="frvp-info-card">
+                                <div class="frvp-info-title">POC (เฉลี่ย)</div>
+                                <div class="frvp-info-val" id="frvp-poc" style="color: var(--color-danger)">-</div>
+                            </div>
+                            <div class="frvp-info-card">
+                                <div class="frvp-info-title">VAL (รับ)</div>
+                                <div class="frvp-info-val" id="frvp-val" style="color: var(--color-info)">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-box" style="background: rgba(168, 85, 247, 0.08); border-color: rgba(168, 85, 247, 0.2); border-left-color: var(--color-purple);">
+                    <h4 style="color: var(--color-purple);"><i class="fa-solid fa-code-merge"></i> การสร้าง Confluence มหาเวทย์ (Options GEX + VWAP SD + FRVP)</h4>
+                    <p>จุดได้เปรียบระดับ "สไนเปอร์ลั่นไกแล้วหลับตาได้" (High-Probability Sniper Entry) คือเมื่อคุณเปิดกราฟแล้วเจอการทับซ้อนของ 3 ตัวแปรเชิงสถิติต่อไปนี้ ณ จุดทศนิยมเดียวกัน:</p>
+                    <ul style="margin-top: 10px; margin-left: 20px; font-size: 14px; color: var(--text-muted)">
+                        <li>1. ราคาวิ่งลงมากระแทกเส้นแนวรับ <strong>Put Wall (CME Option)</strong> ของเมื่อเช้า</li>
+                        <li>2. สอดรับกับเส้นกรอบด้านล่างระดับ <strong>-2 SD หรือ -3 SD ของ Anchored VWAP (New York Session)</strong></li>
+                        <li>3. ระดับราคาดังกล่าวเป็นจุด **POC (หรือ VAH/VAL)** ของกล่อง Fixed Range Volume Profile ที่ลากตั้งแต่ข่าวออกพอดี</li>
+                    </ul>
+                    <p style="margin-top: 10px; font-size: 14px;"><strong>"ถ้าครบ 3 เงื่อนไขนี้ที่พิกัดเดียวกัน ให้เปิดโปรแกรม ATAS แล้วรอดูแรงซื้อหนุนกลับเพื่อเข้าทำกำไรทันที!"</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: TRADE PLAYBOOK -->
+        <div id="chapter3" class="tab-content">
+            <div class="card">
+                <h2><i class="fa-solid fa-gamepad" style="color: var(--color-primary)"></i> บทที่ 4: The Playbook - หน้าเทรดระดับสถาบัน</h2>
+                <p class="lead-text">นี่คือแผงตรวจสอบเงื่อนไข (Trading Checklist) ให้คุณเช็คหน้าเทรดแบบจุดต่อจุด เพื่อตัดอารมณ์และควบคุมการลั่นไกด้วยความมีวินัยสูงสุด</p>
+                
+                <div class="two-column">
+                    <!-- Left Column: Setup A -->
+                    <div>
+                        <h3 style="color: var(--color-primary);"><i class="fa-solid fa-arrow-trend-up"></i> Setup A: Breakout & Pullback to Mean (เล่นตามน้ำ)</h3>
+                        <p style="font-size: 14px;">เหมาะสำหรับช่วงที่มีข่าวหนุน และราคาเลือกฝั่งชัดเจนแล้ว</p>
+                        
+                        <div class="checklist-group">
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checkbox-custom"><i class="fa-solid fa-check"></i></div>
+                                <div class="checklist-text">
+                                    <h4>ราคาปิดทะลุกรอบ 1 SD นอกเลนเหลือง</h4>
+                                    <p>รอให้ราคาพุ่งเบรคเอาต์ปิดเหนือ/ใต้ เส้นแบนด์ 1.0 SD (เหลือง) อย่างชัดเจน ยืนยันว่าโมเมนตัมมา</p>
+                                </div>
+                            </div>
+
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checkbox-custom"><i class="fa-solid fa-check"></i></div>
+                                <div class="checklist-text">
+                                    <h4>ความอดทน: รอย่อ (Pullback) กลับเข้าเลนใน</h4>
+                                    <p>ห้ามไล่ราคาเด็ดขาดในโซนตึงตัว ปล่อยให้ราคาโค้งย่อตัวสลัดเม่ากลับมาชนเส้นกลาง VWAP (ม่วง) หรือระดับ POC ของ FRVP</p>
+                                </div>
+                            </div>
+
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checkbox-custom"><i class="fa-solid fa-check"></i></div>
+                                <div class="checklist-text">
+                                    <h4>สแกน Order Flow ในโปรแกรม ATAS</h4>
+                                    <p>เมื่อราคาสัมผัสเส้นกลาง ตรวจสอบว่ามี Buy/Sell Absorption หรือปริมาณ Limit Orders ก้อนใหญ่รอหนุนจริงไหม</p>
+                                </div>
+                            </div>
+
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checkbox-custom"><i class="fa-solid fa-check"></i></div>
+                                <div class="checklist-text">
+                                    <h4>ลั่นไกออเดอร์ (Target: 1 SD / 2 SD)</h4>
+                                    <p>เปิดสถานะตามเทรนด์ และตั้ง Stop Loss ห่างใต้เส้น VWAP เล็กน้อย หากหลุดกลับเข้าเลนตรงข้ามคือขอยอมมอบตัว</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Setup B -->
+                    <div>
+                        <h3 style="color: var(--color-danger);"><i class="fa-solid fa-arrows-spin"></i> Setup B: Extreme Mean Reversion (สวนจุดหมดแรง)</h3>
+                        <p style="font-size: 14px;">เหมาะสำหรับช่วงตลาดลากเหวี่ยงกระชากไร้แรงต้าน (Oversold/Overbought)</p>
+
+                        <div class="checklist-group">
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checkbox-custom"><i class="fa-solid fa-check"></i></div>
+                                <div class="checklist-text">
+                                    <h4>ราคาวิ่งสุดทางแตะกรอบ 2 SD หรือ 3 SD</h4>
+                                    <p>ราคาจะต้องถูกเทขายหรือวิ่งรุนแรงจนแตะขอบเขตบน/ล่าง 2.0 - 3.0 SD (แบนด์สีเขียว)</p>
+                                </div>
+                            </div>
+
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checkbox-custom"><i class="fa-solid fa-check"></i></div>
+                                <div class="checklist-text">
+                                    <h4>The Confluence: ตรวจสอบความสอดคล้องกับ Option Walls & POC</h4>
+                                    <p>พิกัดขอบเขต 2 SD ต้องสอดรับใกล้เคียงกับแนว Put/Call Wall หรือจุดสถิติสูงสุด POC ที่เราตั้งสถิติไว้เมื่อเช้า</p>
+                                </div>
+                            </div>
+
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checkbox-custom"><i class="fa-solid fa-check"></i></div>
+                                <div class="checklist-text">
+                                    <h4>เช็คแรงงัดหน้างานผ่าน ATAS</h4>
+                                    <p>เมื่อราคาชนขอบ 2-3 SD ต้องไม่มีการทะลุต่อเนื่อง และปรากฏแท่งสู้ของรายใหญ่ (Absorption/Delta Shift)</p>
+                                </div>
+                            </div>
+
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checkbox-custom"><i class="fa-solid fa-check"></i></div>
+                                <div class="checklist-text">
+                                    <h4>เปิดสถานะสวนเทรนด์เพื่อวิ่งเข้าหาค่าเฉลี่ยกลาง</h4>
+                                    <p>เปิดออเดอร์ยิงกลับสวนทางเดิม มุ่งหวังปิดทำกำไรที่เส้นกลาง VWAP เท่านั้น ไม่ถือยาวข้ามแบนด์</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: ORDER FLOW (ATAS) -->
+        <div id="chapter_orderflow" class="tab-content">
+            <div class="card">
+                <h2><i class="fa-solid fa-water" style="color: var(--color-primary)"></i> บทที่ 5: การแกะรอยปริมาณออเดอร์เชิงลึกด้วย Order Flow (ATAS)</h2>
+                <p class="lead-text">เมื่อราคาเดินทางเข้าหาจุดสมดุล Confluence หรือขอบสนาม (SD Bands / Option Walls) ขั้นตอนสำคัญที่สุดก่อนกดลั่นไกคือการอ่านพฤติกรรม "ปริมาณฝั่งซื้อ-ฝั่งขายเชิงรุก" ผ่านโปรแกรม ATAS</p>
+
+                <div class="two-column">
+                    <!-- Left: Core Order Flow Theories -->
+                    <div>
+                        <h3>5.1 สัญญาณแกนหลักใน Footprint Chart (Cluster)</h3>
+                        <p>ภายในหนึ่งแท่งเทียนนั้นจะมีการบันทึกปริมาณออเดอร์ที่ยอมซื้อทันที (Market Orders) สู้กับปริมาณออเดอร์ตั้งรับ (Limit Orders) ดังนี้:</p>
+                        
+                        <div class="checklist-group" style="margin-bottom: 20px;">
+                            <div class="checklist-item" style="border-left: 4px solid var(--color-secondary); cursor: default; background: rgba(15, 23, 42, 0.3);">
+                                <div class="checklist-text">
+                                    <h4 style="color: var(--color-secondary);"><i class="fa-solid fa-scale-unbalanced-flip"></i> Diagonal Imbalance (ความไม่สมดุลตามแนวทแยง)</h4>
+                                    <p>เปรียบเทียบระหว่างแรงซื้อก้าวร้าว (Ask - บนขวา) กับแรงขายก้าวร้าว (Bid - ล่างซ้าย) หากอัตราส่วนต่างเกิน 300% หรือ 400% ขึ้นไป จะแสดงตัวเลขเป็นสีเขียวหรือสีแดงเข้ม แสดงว่ามีผู้เล่นไล่ราคาอย่างบ้าคลั่ง ณ ระดับราคานั้นๆ</p>
+                                </div>
+                            </div>
+                            
+                            <div class="checklist-item" style="border-left: 4px solid var(--color-primary); cursor: default; background: rgba(15, 23, 42, 0.3);">
+                                <div class="checklist-text">
+                                    <h4 style="color: var(--color-primary);"><i class="fa-solid fa-magnet"></i> Absorption (การซับแรงกระแทกของสถาบัน)</h4>
+                                    <p>เกิดเมื่อราคาพุ่งกระแทกแนวรับ Put Wall แต่ใน Footprint มีตัวเลขฝั่ง Bid ด้านซ้ายสีแดงหนาแน่นมาก (สาดขาย Market Order) แต่ราคาไม่สามารถไหลลงต่อได้ และกลับปิดสู้ขึ้น บ่งชี้ว่ามีรายใหญ่ใช้ Passive Limit Order คอยอ้าแขนรับซื้อเก็บของทั้งหมดเอาไว้</p>
+                                </div>
+                            </div>
+
+                            <div class="checklist-item" style="border-left: 4px solid var(--color-danger); cursor: default; background: rgba(15, 23, 42, 0.3);">
+                                <div class="checklist-text">
+                                    <h4 style="color: var(--color-danger);"><i class="fa-solid fa-gauge"></i> Cumulative Delta Divergence</h4>
+                                    <p>ผลต่างของ Market Buy ลบ Market Sell รายคาบเวลา หากราคาทองคำทำจุดต่ำสุดใหม่ (New Low) แต่ Delta สะสมกลับยกตัวสูงขึ้น บ่งชี้ว่าผู้ขายกำลัง "หมดแรง" (Exhaustion) หรือมีรายใหญ่ช้อนซื้อด้วย Iceberg Order เพื่อจงใจสะสมของในราคาถูก</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Footprint Simulator -->
+                    <div class="calculator-panel">
+                        <h4 style="color: var(--color-primary); font-size: 16px; margin-bottom: 10px;"><i class="fa-solid fa-magnifying-glass-chart"></i> ATAS Footprint Real-time Simulator</h4>
+                        <p style="font-size: 13px; margin-bottom: 15px;">ทดลองสลับสถานะออเดอร์เพื่อดูการฟอร์มตัวของตัวเลข Bid | Ask และระดับ POC (ราคาที่มีวอลลุ่มสูงสุดในแท่ง - แถบสีแดง) ของโปรแกรม ATAS</p>
+                        
+                        <div class="simulator-controls" style="margin-bottom: 15px;">
+                            <button class="sim-btn active" id="of-btn-1" onclick="loadOFSimulation('absorption')">Bullish Absorption</button>
+                            <button class="sim-btn" id="of-btn-2" onclick="loadOFSimulation('imbalance')">Buy Squeeze Imbalance</button>
+                            <button class="sim-btn" id="of-btn-3" onclick="loadOFSimulation('exhaustion')">Sell Exhaustion</button>
+                        </div>
+
+                        <div class="footprint-container">
+                            <div class="footprint-grid" id="footprint-grid-container">
+                                <!-- Generated Footprint candles go here -->
+                            </div>
+                        </div>
+
+                        <div class="frvp-info-grid" style="margin-top: 15px;">
+                            <div class="frvp-info-card" style="grid-column: span 2;">
+                                <div class="frvp-info-title">Action Name</div>
+                                <div class="frvp-info-val" id="of-action" style="color: var(--color-secondary); font-size: 13px;">-</div>
+                            </div>
+                            <div class="frvp-info-card">
+                                <div class="frvp-info-title">Bar Delta</div>
+                                <div class="frvp-info-val" id="of-delta" style="color: var(--color-primary)">-</div>
+                            </div>
+                            <div class="frvp-info-card">
+                                <div class="frvp-info-title">Market Status</div>
+                                <div class="frvp-info-val" id="of-status" style="color: #fff; font-size: 12px;">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-box" style="background: rgba(0, 255, 136, 0.05); border-color: rgba(0, 255, 136, 0.15); border-left-color: var(--color-primary);">
+                    <h4><i class="fa-solid fa-bullseye"></i> กฎเหล็ก "สไนเปอร์หมดแรงขาย" (Exhaustion Playbook)</h4>
+                    <p>จุดกลับตัวที่มีแต้มต่อดีที่สุดคือการสังเกตจุดหมดแรงฝั่งขาย (Sell Exhaustion) เมื่อราคาวิ่งทลวงขอบล่าง 2.0-3.0 SD ของ VWAP แต่ตัวเลขซื้อขายฝั่งซ้ายขวาใน ATAS ค่อยๆ รีบตัวบางลงเหลือเพียงแค่หลักหน่วย (เช่น 1x0 หรือ 2x1 สัญญา) หมายความว่าฝั่งขายไม่มีแรงสาดเงินสู้แล้ว... <strong>"จุดนี้คือจุดสิ้นสุดแนวโน้ม ให้ชิงลั่นไกออเดอร์ Buy สวนกลับทันที!"</strong></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>[ 2026 ] <span>BADBOY Wall Street</span> - All Rights Reserved</p>
+    </footer>
+
+    <!-- Interactive Scripting -->
+    <script>
+        // Tab switching logic
+        function switchTab(tabId) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            
+            // Highlight active button
+            event.currentTarget.classList.add('active');
+
+            // Handle rendering based on tabs
+            if (tabId === 'dashboard') {
+                setTimeout(drawSDCurve, 50);
+            } else if (tabId === 'chapter_frvp') {
+                setTimeout(() => {
+                    initFRVPSimulator();
+                }, 50);
+            } else if (tabId === 'chapter_orderflow') {
+                setTimeout(() => {
+                    initOrderFlowSimulator();
+                }, 50);
+            }
+        }
+
+        // Interactive Checklist checked state toggler
+        function toggleChecklist(element) {
+            element.classList.toggle('checked');
+        }
+
+        // Global Calculations for Expected Move
+        let calculatedVals = {
+            center: 4460,
+            sd1Val: 66.9,
+            sd1Upper: 4526.9,
+            sd1Lower: 4393.1,
+            sd2Upper: 4593.8,
+            sd2Lower: 4326.2,
+            sd3Upper: 4660.7,
+            sd3Lower: 4259.3
+        };
+
+        function calculateExpectedMove() {
+            const price = parseFloat(document.getElementById('gold-price').value) || 4460;
+            const iv = parseFloat(document.getElementById('iv-val').value) || 24;
+
+            const dailyPct = iv / 16;
+            const dailyMoveUsd = price * (dailyPct / 100);
+
+            // Save values globally
+            calculatedVals.center = price;
+            calculatedVals.sd1Val = dailyMoveUsd;
+            calculatedVals.sd1Upper = price + dailyMoveUsd;
+            calculatedVals.sd1Lower = price - dailyMoveUsd;
+            calculatedVals.sd2Upper = price + (dailyMoveUsd * 2);
+            calculatedVals.sd2Lower = price - (dailyMoveUsd * 2);
+            calculatedVals.sd3Upper = price + (dailyMoveUsd * 3);
+            calculatedVals.sd3Lower = price - (dailyMoveUsd * 3);
+
+            // Update UI
+            document.getElementById('daily-move-pct').innerText = dailyPct.toFixed(2) + '%';
+            document.getElementById('daily-move-usd').innerText = '$' + dailyMoveUsd.toFixed(2);
+            document.getElementById('sd1-upper').innerText = '$' + calculatedVals.sd1Upper.toFixed(2);
+            document.getElementById('sd1-lower').innerText = '$' + calculatedVals.sd1Lower.toFixed(2);
+            document.getElementById('sd2-upper').innerText = '$' + calculatedVals.sd2Upper.toFixed(2);
+            document.getElementById('sd2-lower').innerText = '$' + calculatedVals.sd2Lower.toFixed(2);
+
+            // Redraw Canvas Chart
+            drawSDCurve();
+        }
+
+        // Draw Interactive Normal Distribution Curve (Bell Curve) using HTML5 Canvas
+        function drawSDCurve() {
+            const canvas = document.getElementById('sd-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Clear previous drawings
+            ctx.clearRect(0, 0, w, h);
+
+            // Define points of the curve
+            const curvePoints = [];
+            const meanX = w / 2;
+            const amp = h * 0.65; // Height of curve amplitude
+            const stdDev = w * 0.16; // Visual standard deviation spread
+
+            for (let x = 0; x <= w; x++) {
+                // Gaussian/Normal Distribution Equation
+                const exponent = -Math.pow(x - meanX, 2) / (2 * Math.pow(stdDev, 2));
+                const y = h - 50 - (amp * Math.exp(exponent));
+                curvePoints.push({ x: x, y: y });
+            }
+
+            // Draw areas (SD segments)
+            function drawArea(xStart, xEnd, color) {
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.moveTo(xStart, h - 50);
+                for (let x = Math.floor(xStart); x <= Math.ceil(xEnd); x++) {
+                    if (curvePoints[x]) {
+                        ctx.lineTo(curvePoints[x].x, curvePoints[x].y);
+                    }
+                }
+                ctx.lineTo(xEnd, h - 50);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // SD Coordinate positions
+            const x3l = meanX - (3 * stdDev);
+            const x2l = meanX - (2 * stdDev);
+            const x1l = meanX - (1 * stdDev);
+            const x1u = meanX + (1 * stdDev);
+            const x2u = meanX + (2 * stdDev);
+            const x3u = meanX + (3 * stdDev);
+
+            // Fill shaded areas under curve
+            drawArea(x3l, x2l, 'rgba(239, 68, 68, 0.05)'); // -3SD to -2SD (Danger Red)
+            drawArea(x2l, x1l, 'rgba(250, 204, 21, 0.08)');  // -2SD to -1SD (Gold Yellow)
+            drawArea(x1l, x1u, 'rgba(0, 255, 136, 0.05)');   // -1SD to +1SD (Normal Green)
+            drawArea(x1u, x2u, 'rgba(250, 204, 21, 0.08)');  // +1SD to +2SD
+            drawArea(x2u, x3u, 'rgba(239, 68, 68, 0.05)'); // +2SD to +3SD
+
+            // Draw Curve Outline
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(curvePoints[0].x, curvePoints[0].y);
+            for (let i = 1; i < curvePoints.length; i++) {
+                ctx.lineTo(curvePoints[i].x, curvePoints[i].y);
+            }
+            ctx.stroke();
+
+            // Draw baseline
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, h - 50);
+            ctx.lineTo(w, h - 50);
+            ctx.stroke();
+
+            // Draw Vertical lines for Standard Deviations
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 5]);
+
+            // Mean Center Line
+            ctx.strokeStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(meanX, h - 50);
+            ctx.lineTo(meanX, h - 50 - amp);
+            ctx.stroke();
+
+            // 1 SD Lines (Yellow)
+            ctx.strokeStyle = '#facc15';
+            ctx.beginPath(); ctx.moveTo(x1l, h - 50); ctx.lineTo(x1l, curvePoints[Math.round(x1l)].y); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(x1u, h - 50); ctx.lineTo(x1u, curvePoints[Math.round(x1u)].y); ctx.stroke();
+
+            // 2 SD Lines (Green)
+            ctx.strokeStyle = '#00ff88';
+            ctx.beginPath(); ctx.moveTo(x2l, h - 50); ctx.lineTo(x2l, curvePoints[Math.round(x2l)].y); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(x2u, h - 50); ctx.lineTo(x2u, curvePoints[Math.round(x2u)].y); ctx.stroke();
+
+            // Restore solid line dash
+            ctx.setLineDash([]);
+
+            // Draw Labels and Calculated Prices at boundaries
+            ctx.font = '11px Kanit';
+            ctx.textAlign = 'center';
+
+            // Text values on X axis
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('$' + calculatedVals.center.toFixed(1), meanX, h - 35);
+            ctx.fillText('Center (VWAP)', meanX, h - 20);
+
+            // -1 SD & +1 SD
+            ctx.fillStyle = '#facc15';
+            ctx.fillText('$' + calculatedVals.sd1Lower.toFixed(1), x1l, h - 35);
+            ctx.fillText('-1 SD', x1l, h - 20);
+            ctx.fillText('$' + calculatedVals.sd1Upper.toFixed(1), x1u, h - 35);
+            ctx.fillText('+1 SD', x1u, h - 20);
+
+            // -2 SD & +2 SD
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('$' + calculatedVals.sd2Lower.toFixed(1), x2l, h - 35);
+            ctx.fillText('-2 SD', x2l, h - 20);
+            ctx.fillText('$' + calculatedVals.sd2Upper.toFixed(1), x2u, h - 35);
+            ctx.fillText('+2 SD', x2u, h - 20);
+        }
+
+        // --- FIXED RANGE VOLUME PROFILE SIMULATOR ---
+        let currentSimulation = 'cpi';
+        let frvpAnimId = null;
+
+        const simulationData = {
+            cpi: {
+                status: 'Squeeze Active',
+                statusColor: '#ef4444',
+                vah: '$4,480',
+                poc: '$4,450',
+                val: '$4,420',
+                candles: [
+                    { x: 50, o: 4475, h: 4485, l: 4470, c: 4480, isGreen: true },
+                    { x: 100, o: 4480, h: 4490, l: 4475, c: 4485, isGreen: true },
+                    { x: 150, o: 4485, h: 4492, l: 4410, c: 4415, isGreen: false }, // NEWS SHOCK CANDLE
+                    { x: 200, o: 4415, h: 4425, l: 4405, c: 4410, isGreen: false },
+                    { x: 250, o: 4410, h: 4435, l: 4408, c: 4432, isGreen: true },
+                    { x: 300, o: 4432, h: 4448, l: 4425, c: 4445, isGreen: true },
+                    { x: 350, o: 4445, h: 4452, l: 4438, c: 4442, isGreen: false }
+                ],
+                profile: [
+                    { y: 40, vol: 15 },
+                    { y: 60, vol: 20 },
+                    { y: 80, vol: 110, isVAH: true },  // VAH at 4480
+                    { y: 100, vol: 30 },
+                    { y: 120, vol: 15 },               // LVN gap!
+                    { y: 140, vol: 145, isPOC: true }, // POC at 4450
+                    { y: 160, vol: 25 },
+                    { y: 180, vol: 80, isVAL: true },  // VAL at 4420
+                    { y: 200, vol: 40 },
+                    { y: 220, vol: 20 }
+                ]
+            },
+            sideways: {
+                status: 'Sideways / Mean Reversion',
+                statusColor: '#facc15',
+                vah: '$4,465',
+                poc: '$4,450',
+                val: '$4,435',
+                candles: [
+                    { x: 50, o: 4445, h: 4455, l: 4440, c: 4452, isGreen: true },
+                    { x: 100, o: 4452, h: 4462, l: 4448, c: 4450, isGreen: false },
+                    { x: 150, o: 4450, h: 4458, l: 4432, c: 4438, isGreen: false },
+                    { x: 200, o: 4438, h: 4448, l: 4435, c: 4446, isGreen: true },
+                    { x: 250, o: 4446, h: 4465, l: 4442, c: 4460, isGreen: true },
+                    { x: 300, o: 4460, h: 4462, l: 4445, c: 4448, isGreen: false },
+                    { x: 350, o: 4448, h: 4455, l: 4444, c: 4451, isGreen: true }
+                ],
+                profile: [
+                    { y: 40, vol: 5 },
+                    { y: 60, vol: 15 },
+                    { y: 80, vol: 30 },
+                    { y: 100, vol: 90, isVAH: true },  // VAH at 4465
+                    { y: 120, vol: 160, isPOC: true }, // POC at 4450
+                    { y: 140, vol: 110 },
+                    { y: 160, vol: 85, isVAL: true },  // VAL at 4435
+                    { y: 180, vol: 25 },
+                    { y: 200, vol: 10 },
+                    { y: 220, vol: 5 }
+                ]
+            },
+            squeeze: {
+                status: 'Negative Gamma Squeeze',
+                statusColor: '#00ff88',
+                vah: '$4,490',
+                poc: '$4,460',
+                val: '$4,440',
+                candles: [
+                    { x: 50, o: 4435, h: 4445, l: 4430, c: 4442, isGreen: true },
+                    { x: 100, o: 4442, h: 4450, l: 4438, c: 4448, isGreen: true },
+                    { x: 150, o: 4448, h: 4465, l: 4445, c: 4462, isGreen: true }, // BREAKING POC
+                    { x: 200, o: 4462, h: 4472, l: 4458, c: 4470, isGreen: true },
+                    { x: 250, o: 4470, h: 4492, l: 4468, c: 4490, isGreen: true }, // EXPLODING TO VAH
+                    { x: 300, o: 4490, h: 4505, l: 4485, c: 4502, isGreen: true },
+                    { x: 350, o: 4502, h: 4510, l: 4495, c: 4498, isGreen: false }
+                ],
+                profile: [
+                    { y: 40, vol: 10 },
+                    { y: 60, vol: 85, isVAH: true },   // VAH at 4490
+                    { y: 80, vol: 45 },
+                    { y: 100, vol: 20 },               // LVN air pocket
+                    { y: 120, vol: 190, isPOC: true }, // POC at 4460
+                    { y: 140, vol: 110 },
+                    { y: 160, vol: 70, isVAL: true },  // VAL at 4440
+                    { y: 180, vol: 35 },
+                    { y: 200, vol: 15 },
+                    { y: 220, vol: 5 }
+                ]
+            }
+        };
+
+        function loadSimulation(simName) {
+            currentSimulation = simName;
+            
+            // Toggle Buttons classes
+            document.querySelectorAll('.sim-btn').forEach(btn => btn.classList.remove('active'));
+            if (simName === 'cpi') document.getElementById('sim-btn-1').classList.add('active');
+            if (simName === 'sideways') document.getElementById('sim-btn-2').classList.add('active');
+            if (simName === 'squeeze') document.getElementById('sim-btn-3').classList.add('active');
+
+            // Update Metadata labels
+            const metadata = simulationData[simName];
+            const statusLabel = document.getElementById('frvp-status');
+            statusLabel.innerText = metadata.status;
+            statusLabel.style.color = metadata.statusColor;
+            document.getElementById('frvp-vah').innerText = metadata.vah;
+            document.getElementById('frvp-poc').innerText = metadata.poc;
+            document.getElementById('frvp-val').innerText = metadata.val;
+
+            initFRVPSimulator();
+        }
+
+        function initFRVPSimulator() {
+            const canvas = document.getElementById('frvp-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            if (frvpAnimId) {
+                cancelAnimationFrame(frvpAnimId);
+            }
+
+            const sim = simulationData[currentSimulation];
+            let priceDotY = h / 2;
+            let targetY = h / 2;
+            let speed = 2;
+            let animTick = 0;
+
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+                animTick += 0.05;
+
+                // 1. Draw horizontal background grid lines
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+                ctx.lineWidth = 1;
+                for (let y = 20; y < h; y += 20) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(w, y);
+                    ctx.stroke();
+                }
+
+                // 2. Draw FRVP Profile (Vertical Volume bars projected from left edge)
+                sim.profile.forEach(p => {
+                    let barLength = p.vol * 1.2;
+                    let barY = p.y;
+                    
+                    if (p.isPOC) {
+                        ctx.fillStyle = 'rgba(239, 68, 68, 0.35)'; // Red for POC
+                    } else if (p.isVAH || p.isVAL) {
+                        ctx.fillStyle = 'rgba(168, 85, 247, 0.25)'; // Purple for Value Area boundaries
+                    } else {
+                        ctx.fillStyle = 'rgba(59, 130, 246, 0.15)'; // Blue for normal node
+                    }
+
+                    ctx.fillRect(0, barY - 8, barLength, 16);
+
+                    // Draw boundary lines on profile
+                    if (p.isPOC) {
+                        ctx.strokeStyle = '#ef4444';
+                        ctx.lineWidth = 1.5;
+                        ctx.beginPath();
+                        ctx.moveTo(0, barY);
+                        ctx.lineTo(w, barY);
+                        ctx.stroke();
+                        
+                        ctx.fillStyle = '#ef4444';
+                        ctx.font = '9px Kanit';
+                        ctx.fillText('POC', w - 30, barY - 4);
+                    }
+                    if (p.isVAH) {
+                        ctx.strokeStyle = 'rgba(250, 204, 21, 0.6)';
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([4, 4]);
+                        ctx.beginPath();
+                        ctx.moveTo(0, barY);
+                        ctx.lineTo(w, barY);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        
+                        ctx.fillStyle = 'rgba(250, 204, 21, 0.8)';
+                        ctx.font = '9px Kanit';
+                        ctx.fillText('VAH', w - 30, barY - 4);
+                    }
+                    if (p.isVAL) {
+                        ctx.strokeStyle = 'rgba(59, 130, 246, 0.6)';
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([4, 4]);
+                        ctx.beginPath();
+                        ctx.moveTo(0, barY);
+                        ctx.lineTo(w, barY);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        
+                        ctx.fillStyle = 'rgba(59, 130, 246, 0.8)';
+                        ctx.font = '9px Kanit';
+                        ctx.fillText('VAL', w - 30, barY - 4);
+                    }
+                });
+
+                // 3. Draw Candlesticks of selected range
+                sim.candles.forEach(c => {
+                    // Map simulated values to Canvas space
+                    // Prices approx 4400 - 4510 to pixel height 240 to 40
+                    function mapY(val) {
+                        return h - 50 - ((val - 4400) / 110) * (h - 100);
+                    }
+
+                    let candleX = c.x + 80; // offset from volume profile on left
+                    let openY = mapY(c.o);
+                    let closeY = mapY(c.c);
+                    let highY = mapY(c.h);
+                    let lowY = mapY(c.l);
+
+                    ctx.strokeStyle = c.isGreen ? '#00ff88' : '#ef4444';
+                    ctx.fillStyle = c.isGreen ? 'rgba(0, 255, 136, 0.3)' : 'rgba(239, 68, 68, 0.3)';
+                    ctx.lineWidth = 1.5;
+
+                    // Wick line
+                    ctx.beginPath();
+                    ctx.moveTo(candleX, highY);
+                    ctx.lineTo(candleX, lowY);
+                    ctx.stroke();
+
+                    // Real Body block
+                    let bodyHeight = Math.abs(closeY - openY) || 3;
+                    let bodyY = Math.min(openY, closeY);
+                    ctx.fillRect(candleX - 6, bodyY, 12, bodyHeight);
+                    ctx.strokeRect(candleX - 6, bodyY, 12, bodyHeight);
+                });
+
+                // 4. Draw Animated Trading Dot simulating current order execution
+                // Dot moves up/down looking for support / vacuum
+                if (currentSimulation === 'cpi') {
+                    // CPI drops quickly (LVN vacuum) then slows down around VAL
+                    targetY = 140 + Math.sin(animTick) * 50; 
+                } else if (currentSimulation === 'sideways') {
+                    // Sideways orbits POC closely
+                    targetY = 120 + Math.sin(animTick * 1.5) * 15;
+                } else {
+                    // Squeeze pushes upwards swiftly
+                    targetY = 90 - Math.sin(animTick) * 40;
+                }
+
+                // Interpolate dot movement
+                priceDotY += (targetY - priceDotY) * 0.1;
+
+                ctx.beginPath();
+                ctx.arc(w - 60, priceDotY, 6, 0, 2 * Math.PI);
+                ctx.fillStyle = '#a855f7';
+                ctx.shadowColor = '#a855f7';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0; // reset shadow
+
+                // Label current dynamic action
+                ctx.font = '10px Kanit';
+                ctx.fillStyle = '#ffffff';
+                let actionText = "Tracking Order Flow...";
+                if (priceDotY > 110 && priceDotY < 130 && currentSimulation === 'cpi') {
+                    actionText = "⚠️ Fast LVN Run (Vacuum Zone)";
+                    ctx.fillStyle = '#ef4444';
+                } else if (Math.abs(priceDotY - 120) < 10) {
+                    actionText = "🔄 POC Magnet (High Acceptance)";
+                    ctx.fillStyle = '#facc15';
+                }
+                ctx.fillText(actionText, w - 170, h - 15);
+
+                frvpAnimId = requestAnimationFrame(draw);
+            }
+
+            draw();
+        }
+
+        // --- ATAS ORDER FLOW SIMULATOR ---
+        let currentOFSimulation = 'absorption';
+
+        const ofSimulationData = {
+            absorption: {
+                action: 'Passive Buying / Absorption',
+                delta: '+1,450 (Bullish Shift)',
+                status: 'Whale passive limit orders absorbed panic sellers',
+                candles: [
+                    {
+                        type: 'bearish',
+                        priceLevels: [
+                            { price: '4425.0', bid: 150, ask: 40 },
+                            { price: '4424.5', bid: 210, ask: 65 },
+                            { price: '4424.0', bid: 380, ask: 90, isPOC: true },
+                            { price: '4423.5', bid: 120, ask: 45 }
+                        ]
+                    },
+                    {
+                        type: 'absorption-bar',
+                        priceLevels: [
+                            { price: '4424.0', bid: 80, ask: 120 },
+                            { price: '4423.5', bid: 140, ask: 310 },
+                            { price: '4423.0', bid: 950, ask: 250, isPOC: true, bidImbalance: true }, // Heavy selling absorbed
+                            { price: '4422.5', bid: 1200, ask: 110, bidImbalance: true } // Huge block buying
+                        ]
+                    },
+                    {
+                        type: 'bullish-reversal',
+                        priceLevels: [
+                            { price: '4425.5', bid: 90, ask: 450, askImbalance: true },
+                            { price: '4425.0', bid: 110, ask: 390, askImbalance: true },
+                            { price: '4424.5', bid: 80, ask: 210, isPOC: true },
+                            { price: '4424.0', bid: 45, ask: 95 }
+                        ]
+                    }
+                ]
+            },
+            imbalance: {
+                action: 'Aggressive Buying Imbalance',
+                delta: '+3,820 (Buying Domination)',
+                status: 'Aggressive market orders squeezing short sellers',
+                candles: [
+                    {
+                        type: 'neutral',
+                        priceLevels: [
+                            { price: '4424.5', bid: 120, ask: 140 },
+                            { price: '4424.0', bid: 250, ask: 280, isPOC: true },
+                            { price: '4423.5', bid: 90, ask: 110 }
+                        ]
+                    },
+                    {
+                        type: 'bullish-strong',
+                        priceLevels: [
+                            { price: '4426.5', bid: 40, ask: 680, askImbalance: true },
+                            { price: '4426.0', bid: 65, ask: 920, askImbalance: true },
+                            { price: '4425.5', bid: 110, ask: 1210, isPOC: true, askImbalance: true },
+                            { price: '4425.0', bid: 150, ask: 340 }
+                        ]
+                    },
+                    {
+                        type: 'bullish-continuation',
+                        priceLevels: [
+                            { price: '4428.0', bid: 30, ask: 410, askImbalance: true },
+                            { price: '4427.5', bid: 80, ask: 320 },
+                            { price: '4427.0', bid: 150, ask: 280, isPOC: true },
+                            { price: '4426.5', bid: 90, ask: 120 }
+                        ]
+                    }
+                ]
+            },
+            exhaustion: {
+                action: 'Aggressive Sell Exhaustion',
+                delta: '-120 (Sellers Dry Out)',
+                status: 'Sellers refuse to sell at low prices (No Liquidity)',
+                candles: [
+                    {
+                        type: 'bearish-fast',
+                        priceLevels: [
+                            { price: '4423.0', bid: 450, ask: 120 },
+                            { price: '4422.5', bid: 890, ask: 340, isPOC: true },
+                            { price: '4422.0', bid: 610, ask: 210 }
+                        ]
+                    },
+                    {
+                        type: 'exhaustion-bar',
+                        priceLevels: [
+                            { price: '4421.5', bid: 180, ask: 90 },
+                            { price: '4421.0', bid: 45, ask: 15 },
+                            { price: '4420.5', bid: 12, ask: 5, isPOC: true }, // Volume shrinking dramatically at the bottom
+                            { price: '4420.0', bid: 2, ask: 0 } // Exhaustion block
+                        ]
+                    },
+                    {
+                        type: 'bullish-pin',
+                        priceLevels: [
+                            { price: '4422.5', bid: 50, ask: 180 },
+                            { price: '4422.0', bid: 90, ask: 320, isPOC: true },
+                            { price: '4421.5', bid: 40, ask: 110 },
+                            { price: '4421.0', bid: 15, ask: 45 }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        function loadOFSimulation(simName) {
+            currentOFSimulation = simName;
+            
+            // Toggle Buttons classes
+            document.querySelectorAll('.sim-btn').forEach(btn => {
+                if(btn.id.startsWith('of-btn-')) {
+                    btn.classList.remove('active');
+                }
+            });
+            if (simName === 'absorption') document.getElementById('of-btn-1').classList.add('active');
+            if (simName === 'imbalance') document.getElementById('of-btn-2').classList.add('active');
+            if (simName === 'exhaustion') document.getElementById('of-btn-3').classList.add('active');
+
+            // Update Metadata labels
+            const metadata = ofSimulationData[simName];
+            document.getElementById('of-action').innerText = metadata.action;
+            document.getElementById('of-delta').innerText = metadata.delta;
+            document.getElementById('of-status').innerText = metadata.status;
+
+            initOrderFlowSimulator();
+        }
+
+        function initOrderFlowSimulator() {
+            const gridContainer = document.getElementById('footprint-grid-container');
+            if (!gridContainer) return;
+
+            // Clear previous grid
+            gridContainer.innerHTML = '';
+
+            const sim = ofSimulationData[currentOFSimulation];
+
+            // Build footprint candle columns dynamically
+            sim.candles.forEach(candle => {
+                const candleDiv = document.createElement('div');
+                candleDiv.className = `footprint-candle ${candle.type}`;
+
+                // Append rows inside candle
+                candle.priceLevels.forEach(lvl => {
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = `footprint-row ${lvl.isPOC ? 'poc' : ''}`;
+
+                    const bidClass = lvl.bidImbalance ? 'imbalance-sell' : '';
+                    const askClass = lvl.askImbalance ? 'imbalance-buy' : '';
+
+                    rowDiv.innerHTML = `
+                        <span style="color: var(--text-muted); font-size: 9px; flex: 1.2; text-align: left;">${lvl.price}</span>
+                        <span class="${bidClass}" style="flex: 1; text-align: right; padding-right: 4px;">${lvl.bid}</span>
+                        <span style="color: rgba(255,255,255,0.15); font-size: 8px; padding: 0 2px;">x</span>
+                        <span class="${askClass}" style="flex: 1; text-align: left; padding-left: 4px;">${lvl.ask}</span>
+                    `;
+                    candleDiv.appendChild(rowDiv);
+                });
+
+                gridContainer.appendChild(candleDiv);
+            });
+        }
+
+        // Initialize App on load
+        window.onload = function() {
+            calculateExpectedMove();
+            loadSimulation('cpi');
+            loadOFSimulation('absorption');
+        };
+    </script>
 </body>
 </html>
