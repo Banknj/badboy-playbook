@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE QUANTITATIVE PLAYBOOK - BADBOY Wall Streetg</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 900px;
+            background-color: #1e1e1e;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+            border: 1px solid #333;
+        }
+        h1 {
+            color: #00ff88;
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .credit {
+            text-align: center;
+            color: #aaaaaa;
+            font-size: 14px;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+        .credit span {
+            color: #ff9900;
+            font-weight: bold;
+        }
+        h2 {
+            color: #ff9900;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-size: 22px;
+        }
+        h3 {
+            color: #4da6ff;
+            margin-top: 25px;
+            font-size: 18px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .highlight-yellow { color: #ffd700; font-weight: bold; }
+        .highlight-green { color: #00ff88; font-weight: bold; }
+        .highlight-red { color: #ff4d4d; font-weight: bold; }
+        .math-box {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-left: 4px solid #4da6ff;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 16px;
+        }
+        .ascii-art {
+            background-color: #0a0a0a;
+            color: #00ff88;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+            text-align: center;
+            border: 1px dashed #333;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #666;
+            font-size: 12px;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+        }
+        .warning-box {
+            background-color: #331a1a;
+            border-left: 4px solid #ff4d4d;
+            padding: 15px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>THE QUANTITATIVE PLAYBOOK</h1>
+    <div class="credit">
+        Created & Strategized by: <span>BADBOY Wall Streetg</span><br>
+        Asset Class: Gold Futures (GC) | Methodology: Options Data, Order Flow (ATAS), Dynamic SD (VWAP)
+    </div>
+
+    <h2>🎯 บทนำ: ปรัชญาการเทรดแบบสถาบัน</h2>
+    <p>การเทรดด้วยกราฟเปล่าเพียงอย่างเดียวอาจทำให้เราตกเป็นเหยื่อของสภาวะตลาดหลอก (False Breakout) คู่มือฉบับนี้จะเปลี่ยนมุมมองการเทรดของคุณให้เหมือนกองทุนระดับสถาบัน โดยอาศัย 3 เสาหลักในการสร้าง Edge (ความได้เปรียบ):</p>
+    <ul>
+        <li><strong>Options Volatility (Static SD):</strong> แผนที่บอกอาณาเขตระดับวันจากสายตา Market Maker</li>
+        <li><strong>Anchored VWAP (Dynamic SD):</strong> เข็มทิศบอกสภาวะเงินทุนแบบเรียลไทม์ในแต่ละ Session</li>
+        <li><strong>Order Flow (Execution):</strong> จังหวะลั่นไกที่คมกริบเมื่อเงื่อนไขสถิติครบถ้วน</li>
+    </ul>
+
+    <h2>🛠️ บทที่ 1: การหา "แผนที่ระดับวัน" (Static SD)</h2>
+    <p>ก่อนลงสนามเทรดทุกวัน สิ่งแรกที่ต้องทำคือการหา <strong>Expected Move (1 SD)</strong> ประจำวัน เพื่อดูว่าเจ้ามือตีเส้นขอบสนามไว้ตรงไหน</p>
+    
+    <h3>1.1 การคำนวณรายวันด้วย The Rule of 16</h3>
+    <div class="math-box">
+        Daily Expected Move (%) = Implied Volatility (IV) ÷ 16
+    </div>
+    <ul>
+        <li>หากค่า VOL ประจำวันอยู่ที่ <span class="highlight-yellow">24%</span></li>
+        <li>24 ÷ 16 = <span class="highlight-yellow">1.5%</span> (กรอบ 1 SD รายวัน)</li>
+        <li>ถ้าราคาตลาดปัจจุบันคือ $4,460 นำ 1.5% ไปคูณ จะได้กรอบการสวิงตัวที่ <strong>$66.9</strong></li>
+    </ul>
+
+    <h3>1.2 กฎของ "โซนสุญญากาศ" (Air Pocket / Zero Gamma)</h3>
+    <p>หากราคา <strong>ทะลุหลุด Put Wall</strong> ลงไปด้านล่าง (หลุดโซน Delta ต่ำๆ) บริเวณนั้นจะไม่มี Gamma รองรับ กราฟจะเกิดภาวะ Free Fall ซึ่งถูกขับเคลื่อนด้วยแรงขาย Futures ล้วนๆ <span class="highlight-red">ห้ามรับมีดเด็ดขาด!</span></p>
+
+    <h2>⏱️ บทที่ 2: การกำหนด "เข็มทิศหน้างาน" ด้วย Anchored VWAP</h2>
+    
+    <div class="ascii-art">
+                     [ ค่าเฉลี่ยกลาง / เส้น VWAP ]
+                                 │
+                                ───
+                              ─     ─
+                            ─         ─
+   ─────────────────────────────────────────────────────────────
+  -3 SD         -2 SD         -1 SD  │   +1 SD         +2 SD         +3 SD
+  [Extreme]  [Reversion]    [Normal] │  [Normal]    [Reversion]   [Extreme]
+    </div>
+
+    <h3>กฎการรีเซ็ตเวลา (The Anchor Reset Routine)</h3>
+    <ul>
+        <li><span class="highlight-yellow">14:00 น. (London):</span> ลากไปวางที่แท่งเทียนบ่าย 2 ตรง เพื่อจับเม็ดเงินยุโรป</li>
+        <li><span class="highlight-yellow">19:00 น. (New York):</span> ลากไปวางที่แท่งเทียน 1 ทุ่มตรง เพื่อจับโวลุ่มมหาศาลจากอเมริกา</li>
+        <li><span class="highlight-red">The Sniper Anchor (มีข่าว):</span> ลาก Anchor ไปวางที่แท่งเทียนตอนข่าวออกพอดี (เช่น 19:30 น.)</li>
+    </ul>
+
+    <h2>⚔️ บทที่ 3: The Playbook - หน้าเทรดระดับสถาบัน</h2>
+    
+    <h3>🟩 Setup A: Breakout & Pullback to Mean (เทรดตามเทรนด์)</h3>
+    <ol>
+        <li><strong>ยืนยัน:</strong> รอให้ราคาเบรคทะลุและยืนเหนือกรอบ <span class="highlight-yellow">1 SD</span> ให้ได้ก่อน</li>
+        <li><strong>รอย่อ:</strong> ห้ามไล่ราคา ให้รอจังหวะ Pullback กลับมาที่ <span class="highlight-green">เส้นกลาง VWAP</span></li>
+        <li><strong>ลั่นไก:</strong> เปิด ATAS หากพบ Volume Absorption ให้กด Buy ทันที</li>
+    </ol>
+
+    <h3>🟥 Setup B: Extreme Mean Reversion (เทรดสวนจุดสุดโต่ง)</h3>
+    <ol>
+        <li><strong>เล็งเป้า:</strong> รอราคาพุ่งไปชนขอบลึกที่โซน <span class="highlight-red">2 SD หรือ 3 SD</span></li>
+        <li><strong>Confluence:</strong> เช็คว่าทับซ้อนกับ Static SD (Rule of 16) หรือไม่</li>
+        <li><strong>ลั่นไก:</strong> เมื่อเห็นแรงสวนกลับใน ATAS อย่างชัดเจน ให้เข้าออเดอร์กลับเข้าหาค่าเฉลี่ย</li>
+    </ol>
+
+    <div class="warning-box">
+        <strong>🚫 กฎเหล็ก:</strong> ระวัง Fat Tails ในสภาวะตลาด Panic ราคาอาจเกาะเส้น -2 SD ไหลลงไปเรื่อยๆ ได้ ห้ามเทรดสวนโดยไม่มีสัญญาณจาก Order Flow (ATAS) ยืนยันเด็ดขาด!
+    </div>
+
+    <div class="footer">
+        [ 2026 ] BADBOY Wall Streetg - All Rights Reserved
+    </div>
+</div>
+
+</body>
+</html>
